@@ -1,0 +1,118 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  core-gcc:
+    name: core · GCC
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build -j"$(nproc)"
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+      - name: Benchmark (also asserts zero heap allocs)
+        run: ./build/bench_tick
+
+  core-clang:
+    name: core · Clang
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Clang
+        run: sudo apt-get update && sudo apt-get install -y clang
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=clang++
+      - name: Build
+        run: cmake --build build -j"$(nproc)"
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+  qp-ik:
+    name: QP IK backend
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Eigen + proxsuite
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libeigen3-dev curl gnupg
+          sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key \
+            -o /usr/share/keyrings/ros-archive-keyring.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu jammy main" \
+            | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install -y ros-humble-proxsuite
+      - name: Configure
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release \
+            -DFLEX_TELEOP_WITH_QP_IK=ON \
+            -DCMAKE_PREFIX_PATH=/opt/ros/humble
+      - name: Build
+        run: cmake --build build -j"$(nproc)"
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+  ros2:
+    name: ROS 2 adapter
+    runs-on: ubuntu-22.04
+    container: ros:humble
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build packages
+        shell: bash
+        run: |
+          apt-get update
+          apt-get install -y python3-colcon-common-extensions
+          source /opt/ros/humble/setup.bash
+          colcon build --base-paths adapters/ros2 \
+            --build-base build-ros --install-base install-ros \
+            --cmake-args -DCMAKE_BUILD_TYPE=Release
+      - name: Smoke test
+        shell: bash
+        run: |
+          source /opt/ros/humble/setup.bash
+          source install-ros/setup.bash
+          ros2 run flex_teleop_ros teleop_node --ros-args -p ik_type:=none &
+          sleep 3
+          ros2 topic list | grep -q /joint_stream
+          ros2 topic list | grep -q /teleop_status
+          pkill -f teleop_node || true
+          echo "smoke ok: topics present"
+
+  static:
+    name: static analysis
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install cppcheck
+        run: sudo apt-get update && sudo apt-get install -y cppcheck
+      - name: cppcheck
+        run: |
+          cppcheck --enable=warning,performance,portability \
+            --error-exitcode=1 --inline-suppr --quiet core/ plugins/
+
+  valgrind:
+    name: memory check
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install valgrind
+        run: sudo apt-get update && sudo apt-get install -y valgrind
+      - name: Build
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+          cmake --build build -j"$(nproc)"
+      - name: Valgrind
+        run: |
+          valgrind --error-exitcode=9 --leak-check=full \
+            ./build/test_interpolator
+          valgrind --error-exitcode=9 --leak-check=full \
+            ./build/test_teleop_core

@@ -1,5 +1,7 @@
 # flex_teleop
 
+[![CI](https://github.com/orange-zhouhq/flex_teleop/actions/workflows/ci.yml/badge.svg)](https://github.com/orange-zhouhq/flex_teleop/actions/workflows/ci.yml)
+
 多轴机械臂 VR 遥操的参考架构。核心设计是**以 `pose_id` 贯穿全链的帧对齐机制**——在 30Hz 稀疏目标、200Hz 关节流、1kHz 伺服轨迹三级时基之间保持无歧义的因果溯源，并让同一套 id 直接服务于多传感器数据对齐与 VLA 数据采集。
 
 > 当前阶段：**核心 + QP IK + ROS 2 适配层可运行**。插值、双入口仲裁、200Hz 编排、可插拔 IK、S-R-S 速度级 QP 与端到端 ROS 2 节点均已实现并验证。
@@ -197,7 +199,8 @@ flex_teleop/
 
 ## License
 
-- `third_party/` 下的 `srs_dh_model` 与 `flex_qp_ik` 沿用 **BSD-3-Clause**，版权头原样保留
-- 框架自身许可证随首个稳定版本确定
+- 框架自身：**Apache-2.0**，见 [LICENSE](LICENSE)
+- `third_party/` 下的 `srs_dh_model` 与 `flex_qp_ik`：**BSD-3-Clause**，版权头原样保留
+- 两者兼容，可组合分发
 
 `third_party/` 中的几何参数仅为通用 S-R-S 构型的测试值，**不含任何具体机器人型号的产品参数**；实际部署时由使用方通过 `QpIkBackend::Config` 注入。
