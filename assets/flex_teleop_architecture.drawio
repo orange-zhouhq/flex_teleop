@@ -1,0 +1,897 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<mxfile host="65bd71144e">
+    <diagram id="teleop-poseid-30-200" name="30Hz-200Hz-teleop-poseid">
+        <mxGraphModel dx="1705" dy="1596" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2300" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" parent="1" style="text;html=1;fontSize=20;fontStyle=1;align=left;verticalAlign=middle;whiteSpace=wrap;" value="30Hz VR 遥操 → 200Hz QP-IK → 1kHz Ruckig：全链 TARGET / STATE 与 pose_id 帧对齐" vertex="1">
+                    <mxGeometry height="38" width="1350" x="50" y="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="lg1" parent="1" style="rounded=0;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="" vertex="1">
+                    <mxGeometry height="16" width="22" x="1450" y="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="lg1t" parent="1" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;" value="TARGET" vertex="1">
+                    <mxGeometry height="24" width="80" x="1478" y="14" as="geometry"/>
+                </mxCell>
+                <mxCell id="lg2" parent="1" style="rounded=0;html=1;fillColor=#ffffff;strokeColor=#333333;" value="" vertex="1">
+                    <mxGeometry height="16" width="22" x="1568" y="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="lg2t" parent="1" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;" value="处理" vertex="1">
+                    <mxGeometry height="24" width="50" x="1596" y="14" as="geometry"/>
+                </mxCell>
+                <mxCell id="lg3" parent="1" style="rounded=0;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="" vertex="1">
+                    <mxGeometry height="16" width="22" x="1660" y="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="lg3t" parent="1" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;" value="STATE" vertex="1">
+                    <mxGeometry height="24" width="60" x="1688" y="14" as="geometry"/>
+                </mxCell>
+                <mxCell id="lg4" parent="1" style="rounded=0;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="" vertex="1">
+                    <mxGeometry height="16" width="22" x="1760" y="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="lg4t" parent="1" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;" value="pose_id" vertex="1">
+                    <mxGeometry height="24" width="70" x="1788" y="14" as="geometry"/>
+                </mxCell>
+                <mxCell id="lg5" parent="1" style="rounded=0;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="" vertex="1">
+                    <mxGeometry height="16" width="22" x="1870" y="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="lg5t" parent="1" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;" value="反馈回环" vertex="1">
+                    <mxGeometry height="24" width="90" x="1898" y="14" as="geometry"/>
+                </mxCell>
+                <mxCell id="domL" parent="1" style="text;html=1;fontSize=11;fontStyle=1;fontColor=#2f5c8f;align=right;verticalAlign=middle;" value="30 Hz 域（稀疏目标）" vertex="1">
+                    <mxGeometry height="22" width="270" x="700" y="266" as="geometry"/>
+                </mxCell>
+                <mxCell id="domR" parent="1" style="text;html=1;fontSize=11;fontStyle=1;fontColor=#8f4a1f;align=left;verticalAlign=middle;" value="200 Hz → 1 kHz 域（关节流 + OTG + 伺服）" vertex="1">
+                    <mxGeometry height="22" width="270" x="990" y="266" as="geometry"/>
+                </mxCell>
+                <mxCell id="domLine" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#c0504d;strokeWidth=2;endSize=2;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="975" y="292" as="sourcePoint"/>
+                        <mxPoint x="975" y="700" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="domL2" parent="1" style="text;html=1;fontSize=10;fontColor=#2f5c8f;align=right;verticalAlign=middle;" value="① ② ③" vertex="1">
+                    <mxGeometry height="20" width="100" x="870" y="705" as="geometry"/>
+                </mxCell>
+                <mxCell id="domR2" parent="1" style="text;html=1;fontSize=10;fontColor=#8f4a1f;align=left;verticalAlign=middle;" value="④ ⑤ ⑥ ⑦" vertex="1">
+                    <mxGeometry height="20" width="120" x="985" y="705" as="geometry"/>
+                </mxCell>
+                <mxCell id="swA" parent="1" style="swimlane;horizontal=1;startSize=28;container=1;collapsible=0;html=1;whiteSpace=wrap;fontStyle=1;fontSize=13;fillColor=#f4f8fd;strokeColor=#b0b8c4;" value="TARGET · 数据契约（每一级实际传递的目标对象）" vertex="1">
+                    <mxGeometry height="205" width="2240" x="20" y="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="t0" parent="swA" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=8;fontSize=11;" value="&lt;b&gt;TARGET · VrPose&lt;/b&gt;　&lt;font style='font-size:10px' color='#666666'&gt;30Hz 产出&lt;/font&gt;&lt;br&gt;────────────&lt;br&gt;pose_id　← 本帧&lt;b&gt;新分配&lt;/b&gt;&lt;br&gt;stamp_vr（VR 本地时钟）&lt;br&gt;left_pose / right_pose / head_pose&lt;br&gt;　OpenXR 原始世界系，未处理&lt;br&gt;valid_L / valid_R / head_valid&lt;br&gt;pinch_L / pinch_R（透传）" vertex="1">
+                    <mxGeometry height="160" width="250" x="30" y="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="t1" parent="swA" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=8;fontSize=11;" value="&lt;b&gt;TARGET · TargetPose30&lt;/b&gt;　&lt;font style='font-size:10px' color='#666666'&gt;30Hz 产出&lt;/font&gt;&lt;br&gt;────────────&lt;br&gt;pose_id　← &lt;b&gt;原样透传&lt;/b&gt;，不重生&lt;br&gt;stamp_vr&lt;br&gt;T_base_tcp[L/R] =&lt;br&gt;　T_base_vr · T_vr_tcp&lt;br&gt;side（left / right）&lt;br&gt;pinch（夹爪映射）&lt;br&gt;&lt;i&gt;锚点/基系变换在本地，不上行&lt;/i&gt;" vertex="1">
+                    <mxGeometry height="160" width="250" x="350" y="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="t2" parent="swA" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=8;fontSize=11;" value="&lt;b&gt;TARGET · 下行帧&lt;/b&gt;　&lt;font style='font-size:10px' color='#666666'&gt;30Hz 到达&lt;/font&gt;&lt;br&gt;────────────&lt;br&gt;TargetPose30（整帧）&lt;br&gt;到达时刻 t_rx（机器人时钟）&lt;br&gt;QoS：BEST_EFFORT / KEEP_LAST(1)&lt;br&gt;每帧绝对位姿自描述&lt;br&gt;&lt;i&gt;丢一帧无感：下一帧完整覆盖&lt;/i&gt;" vertex="1">
+                    <mxGeometry height="160" width="250" x="670" y="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="t3" parent="swA" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=8;fontSize=11;" value="&lt;b&gt;TARGET · TargetPose200&lt;/b&gt;　&lt;font style='font-size:10px' color='#666666'&gt;200Hz 产出&lt;/font&gt;&lt;br&gt;────────────&lt;br&gt;&lt;b&gt;(pose_id_a, pose_id_b, α)&lt;/b&gt;&lt;br&gt;T_target = interp(T_a, T_b, α)&lt;br&gt;　位置 lerp / 姿态 slerp（注意四元数符号）&lt;br&gt;stamp_exec（执行时刻）&lt;br&gt;&lt;i&gt;★ 每一拍都可无损溯源到&lt;br&gt;两个源关键帧与插值比例&lt;/i&gt;" vertex="1">
+                    <mxGeometry height="160" width="250" x="990" y="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4" parent="swA" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=8;fontSize=11;" value="&lt;b&gt;TARGET · JointCmd200&lt;/b&gt;　&lt;font style='font-size:10px' color='#666666'&gt;200Hz 产出&lt;/font&gt;&lt;br&gt;────────────&lt;br&gt;q_cmd[7]（关节角指令）&lt;br&gt;(pose_id_a, pose_id_b, α)&lt;br&gt;　随解携带&lt;br&gt;tick_seq（200Hz 拍号）&lt;br&gt;branch / phi（冗余标注）&lt;br&gt;solve_state = TRACKING / HOLD / ..." vertex="1">
+                    <mxGeometry height="160" width="250" x="1310" y="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="t5" parent="swA" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=8;fontSize=11;" value="&lt;b&gt;TARGET · JointStreamTarget&lt;/b&gt;　&lt;font style='font-size:10px' color='#666666'&gt;200Hz&lt;/font&gt;&lt;br&gt;────────────&lt;br&gt;q_cmd[7] + tick_seq&lt;br&gt;(pose_id_a, pose_id_b, α)&lt;br&gt;mode：pose / joint&lt;br&gt;────────────&lt;br&gt;&lt;b&gt;两个入口汇聚：&lt;/b&gt;&lt;br&gt;⑤ QP IK 200Hz&lt;br&gt;上层关节 30Hz（旁路 IK）" vertex="1">
+                    <mxGeometry height="160" width="250" x="1630" y="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="t6" parent="swA" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=8;fontSize=11;" value="&lt;b&gt;TARGET · RuckigOut 1kHz&lt;/b&gt;　&lt;font style='font-size:10px' color='#666666'&gt;1kHz&lt;/font&gt;&lt;br&gt;────────────&lt;br&gt;q_ref[7]（位置 / 速度 / 加速度）&lt;br&gt;jerk 限幅后的连续轨迹&lt;br&gt;────────────&lt;br&gt;q_fb[7]（驱动器反馈）&lt;br&gt;qd / τ&lt;br&gt;pose_id_ack（200Hz 层填）" vertex="1">
+                    <mxGeometry height="160" width="250" x="1950" y="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="swB" parent="1" style="swimlane;horizontal=1;startSize=28;container=1;collapsible=0;html=1;whiteSpace=wrap;fontStyle=1;fontSize=13;fillColor=#fafafa;strokeColor=#b0b8c4;" value="处理环节（按频率域串联）" vertex="1">
+                    <mxGeometry height="195" width="2240" x="20" y="290" as="geometry"/>
+                </mxCell>
+                <mxCell id="p0" parent="swB" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;strokeWidth=2;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=8;fontSize=11;" value="&lt;b&gt;① VR 采集&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:10px' color='#666666'&gt;30 Hz · OpenXR&lt;/font&gt;&lt;br&gt;─────────&lt;br&gt;只采集、只透传&lt;br&gt;不做任何坐标处理&lt;br&gt;每帧分配 pose_id&lt;br&gt;跟踪丢失 → valid=false" vertex="1">
+                    <mxGeometry height="125" width="250" x="30" y="38" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1" parent="swB" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;strokeWidth=2;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=8;fontSize=11;" value="&lt;b&gt;② 坐标转换 / 遥操映射&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:10px' color='#666666'&gt;30 Hz · PC 侧&lt;/font&gt;&lt;br&gt;─────────&lt;br&gt;T_base_tcp = T_base_vr · T_vr_tcp&lt;br&gt;锚点标定 / 头参考补偿&lt;br&gt;工作区重定位（增益+偏移）&lt;br&gt;&lt;i&gt;pose_id 原样透传，不重生&lt;/i&gt;" vertex="1">
+                    <mxGeometry height="125" width="250" x="350" y="38" as="geometry"/>
+                </mxCell>
+                <mxCell id="p2" parent="swB" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;strokeWidth=2;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=8;fontSize=11;" value="&lt;b&gt;③ 下行传输&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:10px' color='#666666'&gt;30 Hz · 网络&lt;/font&gt;&lt;br&gt;─────────&lt;br&gt;整帧绝对位姿，自描述&lt;br&gt;丢帧由下一帧覆盖&lt;br&gt;&lt;i&gt;stamp 跨机不同源&lt;br&gt;→ 帧身份只认 pose_id&lt;/i&gt;" vertex="1">
+                    <mxGeometry height="125" width="250" x="670" y="38" as="geometry"/>
+                </mxCell>
+                <mxCell id="p3" parent="swB" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;strokeWidth=2;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=8;fontSize=11;" value="&lt;b&gt;④ 帧对齐缓冲 + 插值&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:10px' color='#666666'&gt;200 Hz · 机器人侧&lt;/font&gt;&lt;br&gt;─────────&lt;br&gt;双缓存 (A, B) + 时间比 α&lt;br&gt;α = (t − t_A) / (t_B − t_A)&lt;br&gt;位置 lerp / 姿态 slerp&lt;br&gt;&lt;i&gt;固定延迟（推荐，吸收抖动）&lt;br&gt;或追赶（α 钳 1，有阶梯）&lt;/i&gt;" vertex="1">
+                    <mxGeometry height="125" width="250" x="990" y="38" as="geometry"/>
+                </mxCell>
+                <mxCell id="p4" parent="swB" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;strokeWidth=2;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=8;fontSize=11;" value="&lt;b&gt;⑤ QP 速度级 IK&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:10px' color='#666666'&gt;200 Hz · 每拍一次 QP&lt;/font&gt;&lt;br&gt;─────────&lt;br&gt;min ½dqᵀH dq + gᵀdq&lt;br&gt;s.t. 盒约束 dq ∈ [限位 ∩ 速度]&lt;br&gt;q_cmd = q_prev + dq（一步积分）&lt;br&gt;&lt;i&gt;解不出 → HOLD 上一帧&lt;br&gt;连续 hold → 上报 DEGRADED&lt;/i&gt;" vertex="1">
+                    <mxGeometry height="125" width="250" x="1310" y="38" as="geometry"/>
+                </mxCell>
+                <mxCell id="p5" parent="swB" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;strokeWidth=2;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=8;fontSize=11;" value="&lt;b&gt;⑥ 关节流式目标（汇聚）&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:10px' color='#666666'&gt;200 Hz · 连续流&lt;/font&gt;&lt;br&gt;─────────&lt;br&gt;入口 A：QP IK 200Hz（pose 模式）&lt;br&gt;入口 B：上层关节 30Hz（joint 模式）&lt;br&gt;按最近一帧仲裁，模式切换做平滑交接&lt;br&gt;看门狗：超时 → 安全停" vertex="1">
+                    <mxGeometry height="125" width="250" x="1630" y="38" as="geometry"/>
+                </mxCell>
+                <mxCell id="p6" parent="swB" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;strokeWidth=2;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=8;fontSize=11;" value="&lt;b&gt;⑦ Ruckig OTG 1kHz&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:10px' color='#666666'&gt;1 kHz · 在线轨迹生成&lt;/font&gt;&lt;br&gt;─────────&lt;br&gt;200Hz 目标 → 1kHz 平滑轨迹&lt;br&gt;约束 v_max / a_max / j_max&lt;br&gt;─────────&lt;br&gt;伺服：位置环 → 电流环&lt;br&gt;回读 q_fb / qd / τ" vertex="1">
+                    <mxGeometry height="125" width="250" x="1950" y="38" as="geometry"/>
+                </mxCell>
+                <mxCell id="f01" edge="1" parent="swB" source="p0" style="edgeStyle=none;html=1;rounded=0;strokeWidth=3;strokeColor=#333333;endArrow=block;endFill=1;endSize=6;" target="p1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="f12" edge="1" parent="swB" source="p1" style="edgeStyle=none;html=1;rounded=0;strokeWidth=3;strokeColor=#333333;endArrow=block;endFill=1;endSize=6;" target="p2">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="f23" edge="1" parent="swB" source="p2" style="edgeStyle=none;html=1;rounded=0;strokeWidth=3;strokeColor=#333333;endArrow=block;endFill=1;endSize=6;" target="p3">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="f34" edge="1" parent="swB" source="p3" style="edgeStyle=none;html=1;rounded=0;strokeWidth=3;strokeColor=#333333;endArrow=block;endFill=1;endSize=6;" target="p4">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="f45" edge="1" parent="swB" source="p4" style="edgeStyle=none;html=1;rounded=0;strokeWidth=3;strokeColor=#333333;endArrow=block;endFill=1;endSize=6;" target="p5">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="f56" edge="1" parent="swB" source="p5" style="edgeStyle=none;html=1;rounded=0;strokeWidth=3;strokeColor=#333333;endArrow=block;endFill=1;endSize=6;" target="p6">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="swC" parent="1" style="swimlane;horizontal=1;startSize=28;container=1;collapsible=0;html=1;whiteSpace=wrap;fontStyle=1;fontSize=13;fillColor=#f4faf4;strokeColor=#b0b8c4;" value="STATE · 本地状态与诊断（不随消息传递，逐级自持）" vertex="1">
+                    <mxGeometry height="205" width="2240" x="20" y="505" as="geometry"/>
+                </mxCell>
+                <mxCell id="s0" parent="swC" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=8;fontSize=11;" value="&lt;b&gt;STATE · VR 侧&lt;/b&gt;&lt;br&gt;────────────&lt;br&gt;valid_L / valid_R / head_valid&lt;br&gt;设备 · 手柄连接状态&lt;br&gt;采样周期抖动（30Hz ± jitter）&lt;br&gt;pose_id 计数器&lt;br&gt;stamp_vr（VR 本地时钟）" vertex="1">
+                    <mxGeometry height="160" width="250" x="30" y="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="s1" parent="swC" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=8;fontSize=11;" value="&lt;b&gt;STATE · 遥操映射参数&lt;/b&gt;&lt;br&gt;────────────&lt;br&gt;T_base_vr 标定锚点&lt;br&gt;重定位偏移（工作区映射）&lt;br&gt;操作者身高 / 坐站模式&lt;br&gt;失效保持标志&lt;br&gt;&lt;i&gt;valid=false → 冻结目标不跳变&lt;/i&gt;" vertex="1">
+                    <mxGeometry height="160" width="250" x="350" y="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="s2" parent="swC" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=8;fontSize=11;" value="&lt;b&gt;STATE · 接收侧&lt;/b&gt;&lt;br&gt;────────────&lt;br&gt;最新帧缓冲（KEEP_LAST(1)）&lt;br&gt;t_rx、传输延迟估计&lt;br&gt;丢帧 / 乱序计数&lt;br&gt;看门狗：超时 → HOLD&lt;br&gt;&lt;i&gt;id ≤ max_seen → 直接丢弃&lt;/i&gt;" vertex="1">
+                    <mxGeometry height="160" width="250" x="670" y="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="s3" parent="swC" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=8;fontSize=11;" value="&lt;b&gt;STATE · 插值器&lt;/b&gt;&lt;br&gt;────────────&lt;br&gt;关键帧双缓存 (T_a,id_a)、(T_b,id_b)&lt;br&gt;α ∈ [0, 1]&lt;br&gt;新帧标志（id 推进才换帧）&lt;br&gt;无新帧计数（超时 → HOLD）&lt;br&gt;固定延迟 Δt（如 1 帧周期+裕量）&lt;br&gt;&lt;i&gt;首帧只有 A：hold 到 B 到达&lt;/i&gt;" vertex="1">
+                    <mxGeometry height="160" width="250" x="990" y="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="s4" parent="swC" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=8;fontSize=11;" value="&lt;b&gt;STATE · QP IK&lt;/b&gt;&lt;br&gt;────────────&lt;br&gt;q_prev（warm start，上拍解）&lt;br&gt;φ（臂角）/ branch（冗余分支）&lt;br&gt;solve_state：TRACKING / HOLD&lt;br&gt;　/ DEGRADED / FAULT&lt;br&gt;QP 迭代计数 · 撞上限计数&lt;br&gt;e_model = r − FK(q_prev)　模型内" vertex="1">
+                    <mxGeometry height="160" width="250" x="1310" y="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="s5" parent="swC" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=8;fontSize=11;" value="&lt;b&gt;STATE · 关节流&lt;/b&gt;&lt;br&gt;────────────&lt;br&gt;tick_seq 计数器&lt;br&gt;当前模式（pose / joint）&lt;br&gt;入口仲裁：最近一帧生效&lt;br&gt;超时 / 丢包计数&lt;br&gt;最后一帧缓存（看门狗用）" vertex="1">
+                    <mxGeometry height="160" width="250" x="1630" y="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="s6" parent="swC" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=8;fontSize=11;" value="&lt;b&gt;STATE · Ruckig + 驱动&lt;/b&gt;&lt;br&gt;────────────&lt;br&gt;当前状态 x = (q, qd, qdd)&lt;br&gt;约束 v_max / a_max / j_max&lt;br&gt;q_fb / qd / τ（驱动器）&lt;br&gt;T_actual = FK(q_fb)　真实末端&lt;br&gt;e_real = r − T_actual&lt;br&gt;pose_id_ack（已执行最新 id）" vertex="1">
+                    <mxGeometry height="160" width="250" x="1950" y="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="v_t0" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#9aa4b2;strokeWidth=1.5;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="175" y="252" as="sourcePoint"/>
+                        <mxPoint x="175" y="328" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="v_t1" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#9aa4b2;strokeWidth=1.5;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="495" y="252" as="sourcePoint"/>
+                        <mxPoint x="495" y="328" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="v_t2" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#9aa4b2;strokeWidth=1.5;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="815" y="252" as="sourcePoint"/>
+                        <mxPoint x="815" y="328" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="v_t3" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#9aa4b2;strokeWidth=1.5;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1135" y="252" as="sourcePoint"/>
+                        <mxPoint x="1135" y="328" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="v_t4" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#9aa4b2;strokeWidth=1.5;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1455" y="252" as="sourcePoint"/>
+                        <mxPoint x="1455" y="328" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="v_t5" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#9aa4b2;strokeWidth=1.5;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1775" y="252" as="sourcePoint"/>
+                        <mxPoint x="1775" y="328" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="v_t6" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#9aa4b2;strokeWidth=1.5;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="2095" y="252" as="sourcePoint"/>
+                        <mxPoint x="2095" y="328" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="v_s0" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#9aa4b2;strokeWidth=1.5;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="175" y="453" as="sourcePoint"/>
+                        <mxPoint x="175" y="537" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="v_s1" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#9aa4b2;strokeWidth=1.5;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="495" y="453" as="sourcePoint"/>
+                        <mxPoint x="495" y="537" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="v_s2" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#9aa4b2;strokeWidth=1.5;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="815" y="453" as="sourcePoint"/>
+                        <mxPoint x="815" y="537" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="v_s3" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#9aa4b2;strokeWidth=1.5;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1135" y="453" as="sourcePoint"/>
+                        <mxPoint x="1135" y="537" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="v_s4" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#9aa4b2;strokeWidth=1.5;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1455" y="453" as="sourcePoint"/>
+                        <mxPoint x="1455" y="537" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="v_s5" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#9aa4b2;strokeWidth=1.5;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1775" y="453" as="sourcePoint"/>
+                        <mxPoint x="1775" y="537" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="v_s6" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#9aa4b2;strokeWidth=1.5;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="2095" y="453" as="sourcePoint"/>
+                        <mxPoint x="2095" y="537" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="swD" parent="1" style="swimlane;horizontal=1;startSize=28;container=1;collapsible=0;html=1;whiteSpace=wrap;fontStyle=1;fontSize=13;fillColor=#fdf8f0;strokeColor=#d79b00;strokeWidth=2;" value="pose_id · 全链帧对齐管理　★ 帧身份的唯一依据（stamp 跨机不同源，只做诊断）" vertex="1">
+                    <mxGeometry height="150" width="2240" x="20" y="730" as="geometry"/>
+                </mxCell>
+                <mxCell id="d0" parent="swD" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=6;fontSize=11;" value="&lt;b&gt;① 分配&lt;/b&gt;&lt;br&gt;id = counter++&lt;br&gt;单调递增 uint64" vertex="1">
+                    <mxGeometry height="78" width="250" x="30" y="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="d1" parent="swD" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=6;fontSize=11;" value="&lt;b&gt;② 透传&lt;/b&gt;&lt;br&gt;原样携带，永不重生&lt;br&gt;映射参数变化不换 id" vertex="1">
+                    <mxGeometry height="78" width="250" x="350" y="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="d2" parent="swD" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=6;fontSize=11;" value="&lt;b&gt;③ 接收校验&lt;/b&gt;&lt;br&gt;id ≤ max_seen → 丢弃&lt;br&gt;（乱序 / 重复）" vertex="1">
+                    <mxGeometry height="78" width="250" x="670" y="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="d3" parent="swD" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=6;fontSize=11;" value="&lt;b&gt;④ 插值溯源&lt;/b&gt;&lt;br&gt;输出 (id_a, id_b, α)&lt;br&gt;id 跳号 → 跨帧插值，不报错" vertex="1">
+                    <mxGeometry height="78" width="250" x="990" y="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="d4" parent="swD" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=6;fontSize=11;" value="&lt;b&gt;⑤ 解算携带&lt;/b&gt;&lt;br&gt;三元组随 q_cmd 走&lt;br&gt;HOLD 时标签冻结在最后成功帧" vertex="1">
+                    <mxGeometry height="78" width="250" x="1310" y="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="d5" parent="swD" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=6;fontSize=11;" value="&lt;b&gt;⑥ 流携带&lt;/b&gt;&lt;br&gt;每拍指令都有据可查&lt;br&gt;模式切换时 id 不断档&lt;br&gt;超时 → id 停滞 → HOLD" vertex="1">
+                    <mxGeometry height="78" width="250" x="1630" y="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="d6" parent="swD" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;verticalAlign=top;spacing=4;spacingLeft=8;spacingRight=6;fontSize=11;" value="&lt;b&gt;⑦ 回执&lt;/b&gt;&lt;br&gt;1kHz 层 &amp;lt;b&amp;gt;不带&amp;lt;/b&amp;gt; pose_id&lt;br&gt;pose_id_ack 由 200Hz 层填写&lt;br&gt;闭环测端到端延迟" vertex="1">
+                    <mxGeometry height="78" width="250" x="1950" y="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="bus" edge="1" parent="1" style="endArrow=block;endFill=1;endSize=10;html=1;rounded=0;strokeWidth=4;strokeColor=#d79b00;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="45" y="862" as="sourcePoint"/>
+                        <mxPoint x="2225" y="862" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="swE" parent="1" style="swimlane;horizontal=1;startSize=28;container=1;collapsible=0;html=1;whiteSpace=wrap;fontStyle=1;fontSize=13;fillColor=#faf5fd;strokeColor=#9673a6;" value="反馈回环 · 端到端可观测性（不参与控制）" vertex="1">
+                    <mxGeometry height="150" width="2240" x="20" y="900" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_info" parent="swE" style="text;html=1;fontSize=12;align=center;verticalAlign=middle;whiteSpace=wrap;" value="&lt;b&gt;Feedback { pose_id_ack, tick_seq, q_fb, t_exec }　@30~200Hz 上行&lt;/b&gt;　·　端到端延迟 = t_now − t_stamp(pose_id_ack)（需时钟同步）　·　可追溯'这一帧 VR 目标最终执行到了哪里'" vertex="1">
+                    <mxGeometry height="34" width="1840" x="200" y="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_arrow" edge="1" parent="swE" style="endArrow=block;endFill=1;endSize=12;html=1;rounded=0;strokeWidth=3;strokeColor=#9673a6;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="2200" y="85" as="sourcePoint"/>
+                        <mxPoint x="40" y="85" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e_info2" parent="swE" style="text;html=1;fontSize=11;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#4a3a5c;" value="&lt;b&gt;用途：&lt;/b&gt;VR 侧超时保护（ack 长时间不推进 → 判定链路失效 → 冻结目标，手臂原地保持）　·　延迟 / 卡顿 / 丢帧全景监控　·　不参与控制律，只做可观测性与安全联锁" vertex="1">
+                    <mxGeometry height="30" width="1840" x="200" y="104" as="geometry"/>
+                </mxCell>
+                <mxCell id="p2hint" parent="1" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;fontColor=#8f4a1f;fontStyle=2;" value="▸ 第 2 页：帧对齐三层结构（1:N 组关系 / 三个 ID 职责 / 三种查询 / 契约约束 / ⑤ 视觉采集对齐）　▸ 第 3 页：控制系统视角（方块图 / 延迟预算 / 控制论特征）" vertex="1">
+                    <mxGeometry height="24" width="1700" x="40" y="1056" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="frame-align-3layer" name="帧对齐三层结构">
+        <mxGraphModel dx="1791" dy="1677" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="1650" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="q_s1bg" parent="1" style="rounded=1;html=1;fillColor=#fbfcfe;strokeColor=#d0d7de;arcSize=2;" value="" vertex="1">
+                    <mxGeometry height="460" width="1720" x="40" y="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_h1" parent="1" style="text;html=1;fontSize=15;fontStyle=1;align=left;verticalAlign=middle;" value="① pose_id ↔ tick 是 1:N 外键关系，不是合并 ID" vertex="1">
+                    <mxGeometry height="26" width="1400" x="60" y="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_h1s" parent="1" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;fontColor=#555555;" value="30 Hz : 200 Hz = 3 : 20（非整数比）→ 一个 pose 帧对应 6~7 个 tick，逐帧在 6/7 之间循环。每个 tick 登记 (id_a, id_b, α) 指回所属区间——这就是'组'。" vertex="1">
+                    <mxGeometry height="22" width="1680" x="60" y="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_band0" parent="1" style="rounded=0;html=1;fillColor=#ffe6cc;fillOpacity=45;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="340" width="320" x="200" y="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_band1" parent="1" style="rounded=0;html=1;fillColor=#dae8fc;fillOpacity=45;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="340" width="320" x="520" y="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_band2" parent="1" style="rounded=0;html=1;fillColor=#ffe6cc;fillOpacity=45;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="340" width="320" x="840" y="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_band3" parent="1" style="rounded=0;html=1;fillColor=#dae8fc;fillOpacity=45;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="340" width="320" x="1160" y="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_fr0" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontSize=12;" value="&lt;b&gt;P=100&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:9px'&gt;t = 0&lt;/font&gt;" vertex="1">
+                    <mxGeometry height="130" width="70" x="165" y="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_fr1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontSize=12;" value="&lt;b&gt;P=101&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:9px'&gt;t = 33.3&lt;/font&gt;" vertex="1">
+                    <mxGeometry height="130" width="70" x="485" y="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_fr2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontSize=12;" value="&lt;b&gt;P=102&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:9px'&gt;t = 66.7&lt;/font&gt;" vertex="1">
+                    <mxGeometry height="130" width="70" x="805" y="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_fr3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontSize=12;" value="&lt;b&gt;P=103&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:9px'&gt;t = 100&lt;/font&gt;" vertex="1">
+                    <mxGeometry height="130" width="70" x="1125" y="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_fr4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontSize=12;" value="&lt;b&gt;P=104&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:9px'&gt;t = 133.3&lt;/font&gt;" vertex="1">
+                    <mxGeometry height="130" width="70" x="1445" y="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_dl0" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#6c8ebf;strokeWidth=1.5;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="200" y="305" as="sourcePoint"/>
+                        <mxPoint x="200" y="383" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="q_dl1" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#6c8ebf;strokeWidth=1.5;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="520" y="305" as="sourcePoint"/>
+                        <mxPoint x="520" y="383" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="q_dl2" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#6c8ebf;strokeWidth=1.5;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="840" y="305" as="sourcePoint"/>
+                        <mxPoint x="840" y="383" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="q_dl3" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#6c8ebf;strokeWidth=1.5;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1160" y="305" as="sourcePoint"/>
+                        <mxPoint x="1160" y="383" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="q_dl4" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#6c8ebf;strokeWidth=1.5;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1480" y="305" as="sourcePoint"/>
+                        <mxPoint x="1480" y="383" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="q_axis" edge="1" parent="1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#333333;endFill=1;endSize=6;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="120" y="390" as="sourcePoint"/>
+                        <mxPoint x="1700" y="390" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="q_axist" parent="1" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;fontColor=#333333;" value="时间 t →" vertex="1">
+                    <mxGeometry height="24" width="70" x="1705" y="378" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_dots" parent="1" style="text;html=1;fontSize=16;align=center;verticalAlign=middle;fontColor=#888888;" value="…" vertex="1">
+                    <mxGeometry height="28" width="40" x="1560" y="376" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk0" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="195" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk1" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="243" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk2" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="291" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk3" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="339" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk4" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="387" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk5" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="435" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk6" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="483" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk7" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="531" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk8" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="579" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk9" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="627" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk10" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="675" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk11" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="723" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk12" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="771" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk13" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="819" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk14" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="867" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk15" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="915" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk16" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="963" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk17" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="1011" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk18" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="1059" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk19" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="1107" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk20" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="1155" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk21" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="1203" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk22" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="1251" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk23" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="1299" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk24" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="1347" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk25" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="1395" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk26" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="1443" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk27" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="1491" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_tk28" parent="1" style="ellipse;html=1;fillColor=#666666;strokeColor=none;" value="" vertex="1">
+                    <mxGeometry height="10" width="10" x="1539" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_a0" parent="1" style="text;html=1;fontSize=8;align=center;verticalAlign=middle;fontColor=#555555;" value="0" vertex="1">
+                    <mxGeometry height="16" width="48" x="176" y="398" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_a1" parent="1" style="text;html=1;fontSize=8;align=center;verticalAlign=middle;fontColor=#555555;" value=".15" vertex="1">
+                    <mxGeometry height="16" width="48" x="224" y="398" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_a2" parent="1" style="text;html=1;fontSize=8;align=center;verticalAlign=middle;fontColor=#555555;" value=".30" vertex="1">
+                    <mxGeometry height="16" width="48" x="272" y="398" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_a3" parent="1" style="text;html=1;fontSize=8;align=center;verticalAlign=middle;fontColor=#555555;" value=".45" vertex="1">
+                    <mxGeometry height="16" width="48" x="320" y="398" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_a4" parent="1" style="text;html=1;fontSize=8;align=center;verticalAlign=middle;fontColor=#b45f06;fontStyle=1;" value=".60" vertex="1">
+                    <mxGeometry height="16" width="48" x="368" y="398" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_a5" parent="1" style="text;html=1;fontSize=8;align=center;verticalAlign=middle;fontColor=#555555;" value=".75" vertex="1">
+                    <mxGeometry height="16" width="48" x="416" y="398" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_a6" parent="1" style="text;html=1;fontSize=8;align=center;verticalAlign=middle;fontColor=#555555;" value=".90" vertex="1">
+                    <mxGeometry height="16" width="48" x="464" y="398" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_a7" parent="1" style="text;html=1;fontSize=8;align=center;verticalAlign=middle;fontColor=#b45f06;fontStyle=1;" value=".05" vertex="1">
+                    <mxGeometry height="16" width="48" x="512" y="398" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_a8" parent="1" style="text;html=1;fontSize=8;align=center;verticalAlign=middle;fontColor=#555555;" value=".20" vertex="1">
+                    <mxGeometry height="16" width="48" x="560" y="398" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_a9" parent="1" style="text;html=1;fontSize=8;align=center;verticalAlign=middle;fontColor=#555555;" value=".35" vertex="1">
+                    <mxGeometry height="16" width="48" x="608" y="398" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_a10" parent="1" style="text;html=1;fontSize=9;align=left;verticalAlign=middle;fontColor=#888888;" value="…" vertex="1">
+                    <mxGeometry height="16" width="24" x="656" y="398" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_hl" parent="1" style="ellipse;html=1;fillColor=none;strokeColor=#d79b00;strokeWidth=2;" value="" vertex="1">
+                    <mxGeometry height="22" width="22" x="381" y="376" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_callout" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" value="这一拍的溯源 = &lt;b&gt;(id_a=100, id_b=101, α=0.60)&lt;/b&gt;" vertex="1">
+                    <mxGeometry height="40" width="288" x="248" y="126" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_coarrow" edge="1" parent="1" style="endArrow=block;html=1;strokeColor=#d6b656;strokeWidth=1.5;endFill=1;endSize=5;dashed=1;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="392" y="168" as="sourcePoint"/>
+                        <mxPoint x="392" y="374" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="q_grp0" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#d79b00;strokeWidth=2;fontSize=10;" value="&lt;b&gt;group ①&lt;/b&gt;　id_a=100 → id_b=101　&lt;font style='font-size:9px'&gt;(6~7 ticks)&lt;/font&gt;" vertex="1">
+                    <mxGeometry height="30" width="320" x="200" y="440" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_grp1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#6c8ebf;strokeWidth=2;fontSize=10;" value="&lt;b&gt;group ②&lt;/b&gt;　id_a=101 → id_b=102　&lt;font style='font-size:9px'&gt;(6~7 ticks)&lt;/font&gt;" vertex="1">
+                    <mxGeometry height="30" width="320" x="520" y="440" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_grp2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#d79b00;strokeWidth=2;fontSize=10;" value="&lt;b&gt;group ③&lt;/b&gt;　id_a=102 → id_b=103　&lt;font style='font-size:9px'&gt;(6~7 ticks)&lt;/font&gt;" vertex="1">
+                    <mxGeometry height="30" width="320" x="840" y="440" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_grp3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#6c8ebf;strokeWidth=2;fontSize=10;" value="&lt;b&gt;group ④&lt;/b&gt;　id_a=103 → id_b=104　&lt;font style='font-size:9px'&gt;(6~7 ticks)&lt;/font&gt;" vertex="1">
+                    <mxGeometry height="30" width="320" x="1160" y="440" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_note1" parent="1" style="text;html=1;fontSize=10;align=left;verticalAlign=middle;fontColor=#555555;" value="α 序列：0 → .15 → .30 → .45 → .60 → .75 → .90 → &lt;b style='color:#b45f06'&gt;.05&lt;/b&gt; → .20 → .35 …　每 3 帧（40 个 tick）循环一次，不会均匀 0→1 —— 这就是 20:3 的锯齿" vertex="1">
+                    <mxGeometry height="18" width="1440" x="200" y="478" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_note2" parent="1" style="text;html=1;fontSize=10;align=left;verticalAlign=middle;fontColor=#8f4a1f;fontStyle=2;" value="注：'joint_id' 若指关节序号（0..6），那是同一 tick 内的并行维度 —— 7 轴同生共死，不参与帧对齐；帧对齐只发生在 tick 维度。" vertex="1">
+                    <mxGeometry height="18" width="1440" x="200" y="498" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_s2bg" parent="1" style="rounded=1;html=1;fillColor=#fafafa;strokeColor=#d0d7de;arcSize=2;" value="" vertex="1">
+                    <mxGeometry height="310" width="1720" x="40" y="540" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_h2" parent="1" style="text;html=1;fontSize=15;fontStyle=1;align=left;verticalAlign=middle;" value="② 三个 ID 的职责边界　各管一段，不可互换" vertex="1">
+                    <mxGeometry height="26" width="1400" x="60" y="552" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_h2s" parent="1" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;fontColor=#555555;" value="帧身份认 pose_id，同拍配对认 tick_seq，延迟测量认 stamp。任何一方越界都会出错。" vertex="1">
+                    <mxGeometry height="22" width="1680" x="60" y="580" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_th1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eef2f7;strokeColor=#b0b8c4;fontSize=11;" value="&lt;b&gt;机制&lt;/b&gt;" vertex="1">
+                    <mxGeometry height="40" width="200" x="80" y="610" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_th2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eef2f7;strokeColor=#b0b8c4;fontSize=11;" value="&lt;b&gt;分配点 · 频率&lt;/b&gt;" vertex="1">
+                    <mxGeometry height="40" width="280" x="280" y="610" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_th3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eef2f7;strokeColor=#b0b8c4;fontSize=11;" value="&lt;b&gt;能做什么&lt;/b&gt;" vertex="1">
+                    <mxGeometry height="40" width="620" x="560" y="610" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_th4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eef2f7;strokeColor=#b0b8c4;fontSize=11;" value="&lt;b&gt;不能做什么&lt;/b&gt;" vertex="1">
+                    <mxGeometry height="40" width="540" x="1180" y="610" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_r1c1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" value="&lt;b&gt;pose_id&lt;/b&gt;" vertex="1">
+                    <mxGeometry height="65" width="200" x="80" y="650" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_r1c2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff8ef;strokeColor=#d79b00;fontSize=10;" value="VR 采集侧&lt;br&gt;30 Hz · 源头分配" vertex="1">
+                    <mxGeometry height="65" width="280" x="280" y="650" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_r1c3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff8ef;strokeColor=#d79b00;fontSize=10;" value="帧身份 / 乱序丢弃 / 丢帧判定 / 因果 group key&lt;br&gt;（全链只读，永不重生）" vertex="1">
+                    <mxGeometry height="65" width="620" x="560" y="650" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_r1c4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fdf2e9;strokeColor=#d79b00;fontSize=10;" value="&lt;b style='color:#b45f06'&gt;测延迟&lt;/b&gt; —— 没有时间语义，答不出'迟了多少 ms'" vertex="1">
+                    <mxGeometry height="65" width="540" x="1180" y="650" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_r2c1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" value="&lt;b&gt;tick_seq&lt;/b&gt;" vertex="1">
+                    <mxGeometry height="65" width="200" x="80" y="715" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_r2c2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f4faf4;strokeColor=#82b366;fontSize=10;" value="机器人侧&lt;br&gt;200 Hz · 本地分配" vertex="1">
+                    <mxGeometry height="65" width="280" x="280" y="715" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_r2c3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f4faf4;strokeColor=#82b366;fontSize=10;" value="q_cmd ↔ q_fb 同拍配对 / tick 级丢包检测&lt;br&gt;（同一个 pose_id 下有 6~7 个 tick，只有它能分清是哪一拍）" vertex="1">
+                    <mxGeometry height="65" width="620" x="560" y="715" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_r2c4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f8f1;strokeColor=#82b366;fontSize=10;" value="&lt;b style='color:#38761d'&gt;跨机对齐&lt;/b&gt; —— 两机基数不同，且不跨机器存在" vertex="1">
+                    <mxGeometry height="65" width="540" x="1180" y="715" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_r3c1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" value="&lt;b&gt;stamp&lt;/b&gt;" vertex="1">
+                    <mxGeometry height="65" width="200" x="80" y="780" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_r3c2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#faf5fd;strokeColor=#9673a6;fontSize=10;" value="各端本地时钟&lt;br&gt;随帧携带" vertex="1">
+                    <mxGeometry height="65" width="280" x="280" y="780" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_r3c3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#faf5fd;strokeColor=#9673a6;fontSize=10;" value="端到端延迟 / 录制回放 / 抖动统计&lt;br&gt;（唯一能回答'晚了多少'的机制，前提是时钟同步）" vertex="1">
+                    <mxGeometry height="65" width="620" x="560" y="780" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_r3c4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f7f2fa;strokeColor=#9673a6;fontSize=10;" value="&lt;b style='color:#674ea7'&gt;帧身份&lt;/b&gt; —— 跨机不同源、可被 NTP 跳变、精度不足以分辨 5ms" vertex="1">
+                    <mxGeometry height="65" width="540" x="1180" y="780" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_s3bg" parent="1" style="rounded=1;html=1;fillColor=#fbfcfe;strokeColor=#d0d7de;arcSize=2;" value="" vertex="1">
+                    <mxGeometry height="230" width="1720" x="40" y="870" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_h3" parent="1" style="text;html=1;fontSize=15;fontStyle=1;align=left;verticalAlign=middle;" value="③ 同一个问题，三种查询各用各的键" vertex="1">
+                    <mxGeometry height="26" width="1400" x="60" y="882" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_q1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;verticalAlign=top;spacing=8;fontSize=12;" value="&lt;b&gt;因果查询 · pose_id&lt;/b&gt;　&lt;font style='font-size:10px' color='#8f6a20'&gt;离线 / 诊断&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font style='font-size:11px'&gt;ticks WHERE id_a ≤ P &amp;lt; id_b&lt;/font&gt;&lt;br&gt;&lt;font style='font-size:10px'&gt;&lt;i&gt;→ 这帧 VR 目标影响过的全部关节指令&lt;/i&gt;&lt;/font&gt;" vertex="1">
+                    <mxGeometry height="140" width="520" x="80" y="920" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_q2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;spacing=8;fontSize=12;" value="&lt;b&gt;同拍配对 · tick_seq&lt;/b&gt;　&lt;font style='font-size:10px' color='#38761d'&gt;实时&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font style='font-size:11px'&gt;q_cmd.tick_seq == q_fb.tick_seq&lt;/font&gt;&lt;br&gt;&lt;font style='font-size:10px'&gt;&lt;i&gt;→ 领先量 q_cmd−q_fb、跟踪误差&lt;/i&gt;&lt;/font&gt;" vertex="1">
+                    <mxGeometry height="140" width="520" x="620" y="920" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_q3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;verticalAlign=top;spacing=8;fontSize=12;" value="&lt;b&gt;延迟测量 · stamp&lt;/b&gt;　&lt;font style='font-size:10px' color='#674ea7'&gt;需时钟同步（PTP / chrony）&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font style='font-size:11px'&gt;Δt = t_now − t_stamp(id_ack)&lt;/font&gt;&lt;br&gt;&lt;font style='font-size:10px'&gt;&lt;i&gt;→ 端到端延迟、卡顿定位&lt;/i&gt;&lt;/font&gt;" vertex="1">
+                    <mxGeometry height="140" width="520" x="1160" y="920" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_s4bg" parent="1" style="rounded=1;html=1;fillColor=#fdf8f0;strokeColor=#d79b00;strokeWidth=2;arcSize=2;dashed=1;" value="" vertex="1">
+                    <mxGeometry height="190" width="1720" x="40" y="1120" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_h4" parent="1" style="text;html=1;fontSize=15;fontStyle=1;align=left;verticalAlign=middle;fontColor=#8f4a1f;" value="④ 契约约束 —— 这三条不写进协议，前面的对齐全是假的" vertex="1">
+                    <mxGeometry height="26" width="1400" x="60" y="1132" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_c1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;align=left;verticalAlign=top;spacing=8;fontSize=11;" value="&lt;b style='font-size:13px'&gt;① 保活帧&lt;/b&gt;&lt;br&gt;pose_id 按 30Hz &lt;b&gt;无条件递增&lt;/b&gt;：手不动也发帧，id 照涨。&lt;br&gt;否则'id 停滞'分不清是静止还是断链，&lt;br&gt;所有超时判据（→ HOLD）全部失效。" vertex="1">
+                    <mxGeometry height="125" width="520" x="80" y="1168" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_c2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;align=left;verticalAlign=top;spacing=8;fontSize=11;" value="&lt;b style='font-size:13px'&gt;② HOLD 时冻结溯源标签&lt;/b&gt;&lt;br&gt;QP 解不出时 q_cmd 保持上一帧，&lt;br&gt;(id_a, id_b, α) 也冻结在最后成功的那帧。&lt;br&gt;否则会谎报'这拍在追新目标'。" vertex="1">
+                    <mxGeometry height="125" width="520" x="620" y="1168" as="geometry"/>
+                </mxCell>
+                <mxCell id="q_c3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;align=left;verticalAlign=top;spacing=8;fontSize=11;" value="&lt;b style='font-size:13px'&gt;③ ack 语义要写死&lt;/b&gt;&lt;br&gt;pose_id_ack = 该 id 的影响已 &lt;b&gt;全部下发&lt;/b&gt;，&lt;br&gt;不等于'已执行到位'。&lt;br&gt;做超时保护够用，做精度评估不够。" vertex="1">
+                    <mxGeometry height="125" width="520" x="1160" y="1168" as="geometry"/>
+                </mxCell>
+            <mxCell id="q_s5bg" parent="1" style="rounded=1;html=1;fillColor=#f2f8f7;strokeColor=#0e8088;strokeWidth=2;arcSize=2;" value="" vertex="1"><mxGeometry x="40" y="1340" width="1720" height="265" as="geometry"/></mxCell><mxCell id="q_h5" parent="1" style="text;html=1;fontSize=15;fontStyle=1;align=left;verticalAlign=middle;fontColor=#0b5f66;" value="⑤ 视觉采集的帧对齐 —— pose_id 的第四个用途（数据集 / 时延分析 / 多模态标定）" vertex="1"><mxGeometry x="60" y="1352" width="1600" height="26" as="geometry"/></mxCell><mxCell id="q_v1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0e8088;align=left;verticalAlign=top;spacing=8;fontSize=11;" value="&lt;b&gt;相机 / 传感器&lt;/b&gt;　&lt;font style='font-size:10px' color='#666666'&gt;15 / 30 / 60 Hz 任意&lt;/font&gt;&lt;br&gt;─────────&lt;br&gt;图像帧本身&lt;b&gt;不带 id&lt;/b&gt;&lt;br&gt;只有本地到达时刻&lt;br&gt;帧率不必与遥操相同" vertex="1"><mxGeometry x="80" y="1410" width="320" height="135" as="geometry"/></mxCell><mxCell id="q_v2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0e8088;align=left;verticalAlign=top;spacing=8;fontSize=11;" value="&lt;b&gt;打标：取当前插值区间&lt;/b&gt;　&lt;font style='font-size:10px' color='#0b5f66'&gt;零额外同步&lt;/font&gt;&lt;br&gt;─────────&lt;br&gt;图像到达时刻 → (id_a, id_b, α)&lt;br&gt;与遥操目标共用同一个插值器状态&lt;br&gt;不依赖跨机时钟" vertex="1"><mxGeometry x="440" y="1410" width="360" height="135" as="geometry"/></mxCell><mxCell id="q_v3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0e8088;align=left;verticalAlign=top;spacing=8;fontSize=11;" value="&lt;b&gt;样本（自描述）&lt;/b&gt;&lt;br&gt;─────────&lt;br&gt;{ image_k, (id_a, id_b, α), q_fb, T_actual }&lt;br&gt;─────────&lt;br&gt;离线可精确重建该时刻的&lt;br&gt;目标位姿与实际位姿" vertex="1"><mxGeometry x="840" y="1410" width="380" height="135" as="geometry"/></mxCell><mxCell id="q_v4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f2f8f7;strokeColor=#0e8088;align=left;verticalAlign=top;spacing=8;fontSize=10;" value="&lt;b&gt;为什么用 id 而不是时间戳&lt;/b&gt;&lt;br&gt;· 图像和目标常来自不同设备，时钟不同源&lt;br&gt;· id 单调，区间定位无歧义&lt;br&gt;· 帧率不同也能落进同一套区间&lt;br&gt;&lt;b&gt;→ 控制链、数据集、时延分析共用一套对齐口径&lt;/b&gt;" vertex="1"><mxGeometry x="1260" y="1410" width="460" height="135" as="geometry"/></mxCell><mxCell id="q_va1" parent="1" edge="1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#333333;endFill=1;endSize=6;"><mxGeometry relative="1" as="geometry"><mxPoint x="400" y="1477" as="sourcePoint"/><mxPoint x="440" y="1477" as="targetPoint"/></mxGeometry></mxCell><mxCell id="q_va2" parent="1" edge="1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#333333;endFill=1;endSize=6;"><mxGeometry relative="1" as="geometry"><mxPoint x="800" y="1477" as="sourcePoint"/><mxPoint x="840" y="1477" as="targetPoint"/></mxGeometry></mxCell><mxCell id="q_va3" parent="1" edge="1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#333333;endFill=1;endSize=6;"><mxGeometry relative="1" as="geometry"><mxPoint x="1220" y="1477" as="sourcePoint"/><mxPoint x="1260" y="1477" as="targetPoint"/></mxGeometry></mxCell><mxCell id="q_vnote" parent="1" style="text;html=1;fontSize=10;align=left;verticalAlign=middle;fontColor=#0b5f66;" value="→ 这就是模仿学习数据集里「观测-动作对齐」的通用解：每帧样本自带 (id_a, id_b, α)，不用事后拿时间戳硬配；多相机不同帧率也都能落到同一套 pose 区间上。" vertex="1"><mxGeometry x="80" y="1560" width="1640" height="22" as="geometry"/></mxCell></root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="control-view" name="控制系统视角">
+        <mxGraphModel dx="1769" dy="1656" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="1300" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="c_s1bg" parent="1" style="rounded=1;html=1;fillColor=#fbfcfe;strokeColor=#d0d7de;arcSize=2;" value="" vertex="1">
+                    <mxGeometry height="500" width="1720" x="40" y="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_h1" parent="1" style="text;html=1;fontSize=15;fontStyle=1;align=left;verticalAlign=middle;" value="① 控制框图：多速率采样系统（采样 → 传输 → 重构 → 采样 → IK → 伺服）" vertex="1">
+                    <mxGeometry height="26" width="1400" x="60" y="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_h1s" parent="1" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;fontColor=#555555;" value="r(t) 是操作者意图；H 是整条链上唯一能设计的环节；q_fb 不进目标生成。" vertex="1">
+                    <mxGeometry height="22" width="1200" x="60" y="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_r" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontSize=13;fontStyle=1;" value="r(t)" vertex="1">
+                    <mxGeometry height="56" width="70" x="90" y="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_q" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontSize=13;fontStyle=1;" value="q(t)" vertex="1">
+                    <mxGeometry height="56" width="70" x="1325" y="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_s1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;strokeWidth=2;fontSize=12;" value="&lt;b&gt;S1&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:9px'&gt;30Hz 采样&lt;/font&gt;" vertex="1">
+                    <mxGeometry height="80" width="110" x="185" y="208" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_net" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;strokeWidth=2;fontSize=12;fontStyle=1;" value="&lt;b&gt;网络&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:9px'&gt;τ + σ&lt;/font&gt;" vertex="1">
+                    <mxGeometry height="80" width="110" x="325" y="208" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_h" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=3;fontSize=12;" value="&lt;b&gt;H&lt;/b&gt; 重构器&lt;br&gt;&lt;font style='font-size:9px'&gt;FOH · lerp / slerp&lt;/font&gt;" vertex="1">
+                    <mxGeometry height="80" width="140" x="465" y="208" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_s2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;strokeWidth=2;fontSize=12;" value="&lt;b&gt;S2&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:9px'&gt;200Hz 采样&lt;/font&gt;" vertex="1">
+                    <mxGeometry height="80" width="110" x="635" y="208" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_sum" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;strokeWidth=2;fontSize=16;fontStyle=1;" value="Σ" vertex="1">
+                    <mxGeometry height="40" width="40" x="775" y="228" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_sumneg" parent="1" style="text;html=1;fontSize=14;fontStyle=1;align=center;verticalAlign=middle;" value="−" vertex="1">
+                    <mxGeometry height="20" width="20" x="762" y="262" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_ik" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;strokeWidth=2;fontSize=12;" value="&lt;b&gt;C_QP&lt;/b&gt; 速度级 IK&lt;br&gt;&lt;font style='font-size:9px'&gt;dq 盒约束 · 限位硬约束&lt;/font&gt;" vertex="1">
+                    <mxGeometry height="80" width="120" x="845" y="208" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_int" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;strokeWidth=2;fontSize=20;fontStyle=1;" value="∫" vertex="1">
+                    <mxGeometry height="56" width="56" x="985" y="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_gs" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;strokeWidth=2;fontSize=12;" value="&lt;b&gt;G_s&lt;/b&gt; 位置伺服&lt;br&gt;&lt;font style='font-size:9px'&gt;驱动器内环&lt;/font&gt;" vertex="1">
+                    <mxGeometry height="80" width="100" x="1205" y="208" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_a1" edge="1" parent="1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#333333;endFill=1;endSize=6;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="160" y="248" as="sourcePoint"/>
+                        <mxPoint x="185" y="248" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="c_a2" edge="1" parent="1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#333333;endFill=1;endSize=6;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="295" y="248" as="sourcePoint"/>
+                        <mxPoint x="325" y="248" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="c_a3" edge="1" parent="1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#333333;endFill=1;endSize=6;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="435" y="248" as="sourcePoint"/>
+                        <mxPoint x="465" y="248" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="c_a4" edge="1" parent="1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#333333;endFill=1;endSize=6;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="605" y="248" as="sourcePoint"/>
+                        <mxPoint x="635" y="248" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="c_a5" edge="1" parent="1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#333333;endFill=1;endSize=6;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="745" y="248" as="sourcePoint"/>
+                        <mxPoint x="775" y="248" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="c_a6" edge="1" parent="1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#333333;endFill=1;endSize=6;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="815" y="248" as="sourcePoint"/>
+                        <mxPoint x="845" y="248" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="c_a7" edge="1" parent="1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#333333;endFill=1;endSize=6;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="985" y="248" as="sourcePoint"/>
+                        <mxPoint x="1015" y="248" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="c_a8" edge="1" parent="1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#333333;endFill=1;endSize=6;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1041" y="248" as="sourcePoint"/>
+                        <mxPoint x="1065" y="248" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="c_a9" edge="1" parent="1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#333333;endFill=1;endSize=6;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1305" y="248" as="sourcePoint"/>
+                        <mxPoint x="1325" y="248" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="c_fk1" edge="1" parent="1" style="endArrow=none;html=1;strokeWidth=2;strokeColor=#333333;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1053" y="248" as="sourcePoint"/>
+                        <mxPoint x="1053" y="400" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="c_fk2" edge="1" parent="1" style="endArrow=none;html=1;strokeWidth=2;strokeColor=#333333;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1053" y="400" as="sourcePoint"/>
+                        <mxPoint x="1000" y="400" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="c_fk3" edge="1" parent="1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#333333;endFill=1;endSize=6;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="890" y="400" as="sourcePoint"/>
+                        <mxPoint x="795" y="400" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="c_fk4" edge="1" parent="1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#333333;endFill=1;endSize=6;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="795" y="400" as="sourcePoint"/>
+                        <mxPoint x="795" y="268" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="c_fkb" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#333333;strokeWidth=2;fontSize=12;" value="&lt;b&gt;FK(q)&lt;/b&gt;" vertex="1">
+                    <mxGeometry height="50" width="110" x="890" y="375" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_fkl" parent="1" style="text;html=1;fontSize=9;align=left;verticalAlign=middle;fontColor=#666666;" value="q_prev（上一拍解）" vertex="1">
+                    <mxGeometry height="18" width="160" x="930" y="428" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_qfb" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeWidth=2;strokeColor=#9673a6;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1360" y="276" as="sourcePoint"/>
+                        <mxPoint x="1360" y="358" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="c_qfb_h" edge="1" parent="1" style="endArrow=block;html=1;dashed=1;strokeWidth=2;strokeColor=#9673a6;endFill=1;endSize=6;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1360" y="358" as="sourcePoint"/>
+                        <mxPoint x="1400" y="358" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="c_qfbt2" parent="1" style="text;html=1;fontSize=11;align=right;verticalAlign=middle;fontColor=#674ea7;" value="不进目标生成 → &lt;b&gt;外环不闭合&lt;/b&gt;" vertex="1">
+                    <mxGeometry height="22" width="280" x="1000" y="476" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_obs" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f7f2fa;strokeColor=#9673a6;strokeWidth=2;align=left;verticalAlign=top;spacing=8;fontSize=10;" value="&lt;b style='color:#674ea7;font-size:12px'&gt;真实状态观测（不参与控制）&lt;/b&gt;&lt;br&gt;&lt;br&gt;q_fb ──▶ &lt;b&gt;FK(q_fb)&lt;/b&gt; ──▶ &lt;b&gt;T_actual&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;e_model&lt;/b&gt; = r − FK(q_prev)　&lt;i&gt;IK 模型内残差&lt;/i&gt;&lt;br&gt;&lt;b&gt;e_real&lt;/b&gt;　 = r − FK(q_fb)　　&lt;i&gt;真实跟踪误差&lt;/i&gt;&lt;br&gt;&lt;b&gt;Δq&lt;/b&gt;　　　 = q_cmd − q_fb　　&lt;i&gt;伺服领先量&lt;/i&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;e_real ≈ e_model + J·Δq&lt;/b&gt;&lt;br&gt;&lt;i&gt;→ 只看 e_model，会把'伺服没跟上'&lt;br&gt;误判为'跟踪良好'&lt;/i&gt;" vertex="1">
+                    <mxGeometry height="220" width="380" x="1400" y="250" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_l1" parent="1" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#666666;" value="T1 = 33.3 ms" vertex="1">
+                    <mxGeometry height="18" width="110" x="185" y="296" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_l2" parent="1" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#666666;" value="τ + σ（抖动）" vertex="1">
+                    <mxGeometry height="18" width="110" x="325" y="296" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_l3" parent="1" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#8f4a1f;fontStyle=1;" value="延迟 = T1，sinc² 低通" vertex="1">
+                    <mxGeometry height="18" width="140" x="465" y="296" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_l4" parent="1" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#666666;" value="T2 = 5 ms" vertex="1">
+                    <mxGeometry height="18" width="110" x="635" y="296" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_l6" parent="1" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#666666;" value="K = 0.5 / step ≈ 22 Hz" vertex="1">
+                    <mxGeometry height="18" width="120" x="845" y="296" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_l7" parent="1" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#666666;" value="离散累加" vertex="1">
+                    <mxGeometry height="18" width="56" x="985" y="296" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_l8" parent="1" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#666666;" value="f_bw ≈ 20 Hz" vertex="1">
+                    <mxGeometry height="18" width="100" x="1205" y="296" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_chain" parent="1" style="text;html=1;fontSize=10;align=left;verticalAlign=middle;fontColor=#333333;" value="级联结构：&lt;b&gt;C_QP（比例） → ∫（200Hz 累加） → Ruckig（1kHz 整形） → G_s（一阶低通）&lt;/b&gt;　= 位置跟踪系统；外环不引入稳定性约束，只影响跟踪误差与领先量。" vertex="1">
+                    <mxGeometry height="22" width="1500" x="200" y="530" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_note" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f6ff;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacing=8;fontSize=10;" value="&lt;b&gt;为什么不怕失稳&lt;/b&gt;&lt;br&gt;外环没有闭合回路：q_fb 只做诊断，&lt;br&gt;H 和 IK 的输出不依赖实际关节角。&lt;br&gt;稳定性由驱动器内环独立保证。" vertex="1">
+                    <mxGeometry height="100" width="410" x="1330" y="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_s2bg" parent="1" style="rounded=1;html=1;fillColor=#fafafa;strokeColor=#d0d7de;arcSize=2;" value="" vertex="1">
+                    <mxGeometry height="340" width="1720" x="40" y="590" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_h2" parent="1" style="text;html=1;fontSize=15;fontStyle=1;align=left;verticalAlign=middle;" value="② 延迟预算：约 66.5 ms 端到端，其中 33.3 ms 是主动引入的" vertex="1">
+                    <mxGeometry height="26" width="1400" x="60" y="602" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_b1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#b4c7e7;strokeColor=#ffffff;strokeWidth=2;fontSize=9;align=center;" value="VR 采样保持&lt;br&gt;16.7 ms（T1/2 均值）" vertex="1">
+                    <mxGeometry height="60" width="334" x="200" y="700" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_b2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d9d9d9;strokeColor=#ffffff;strokeWidth=2;fontSize=9;align=center;" value="网络&lt;br&gt;5 ms" vertex="1">
+                    <mxGeometry height="60" width="100" x="534" y="700" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_b3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f4b183;strokeColor=#ffffff;strokeWidth=2;fontSize=10;align=center;" value="&lt;b&gt;重构器（固定延迟）&lt;br&gt;33.3 ms = T1&lt;/b&gt;" vertex="1">
+                    <mxGeometry height="60" width="666" x="634" y="700" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_b4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#a9d18e;strokeColor=#ffffff;strokeWidth=2;" value="" vertex="1">
+                    <mxGeometry height="60" width="10" x="1300" y="700" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_b5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#b4a7d6;strokeColor=#ffffff;strokeWidth=2;fontSize=9;align=center;" value="伺服&lt;br&gt;8 ms" vertex="1">
+                    <mxGeometry height="60" width="160" x="1370" y="700" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_t0" parent="1" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#555555;" value="0" vertex="1">
+                    <mxGeometry height="18" width="60" x="170" y="766" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_t1" parent="1" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#555555;" value="16.7" vertex="1">
+                    <mxGeometry height="18" width="60" x="504" y="766" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_t2" parent="1" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#555555;" value="21.7" vertex="1">
+                    <mxGeometry height="18" width="60" x="604" y="766" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_t3" parent="1" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#555555;" value="55.0" vertex="1">
+                    <mxGeometry height="18" width="60" x="1270" y="766" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_t4" parent="1" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#555555;fontStyle=1;" value="66.5 ms" vertex="1">
+                    <mxGeometry height="18" width="80" x="1490" y="766" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_k0" edge="1" parent="1" style="endArrow=none;html=1;strokeColor=#888888;strokeWidth=1;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="200" y="760" as="sourcePoint"/>
+                        <mxPoint x="200" y="766" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="c_k1" edge="1" parent="1" style="endArrow=none;html=1;strokeColor=#888888;strokeWidth=1;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="534" y="760" as="sourcePoint"/>
+                        <mxPoint x="534" y="766" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="c_k2" edge="1" parent="1" style="endArrow=none;html=1;strokeColor=#888888;strokeWidth=1;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="634" y="760" as="sourcePoint"/>
+                        <mxPoint x="634" y="766" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="c_k3" edge="1" parent="1" style="endArrow=none;html=1;strokeColor=#888888;strokeWidth=1;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1300" y="760" as="sourcePoint"/>
+                        <mxPoint x="1300" y="766" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="c_k4" edge="1" parent="1" style="endArrow=none;html=1;strokeColor=#888888;strokeWidth=1;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1530" y="760" as="sourcePoint"/>
+                        <mxPoint x="1530" y="766" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="c_iklead" edge="1" parent="1" style="endArrow=none;html=1;strokeColor=#82b366;strokeWidth=1;dashed=1;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1305" y="700" as="sourcePoint"/>
+                        <mxPoint x="1305" y="668" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="c_ikt" parent="1" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#38761d;" value="QP IK 0.5ms" vertex="1">
+                    <mxGeometry height="18" width="120" x="1245" y="646" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_thr" edge="1" parent="1" style="endArrow=none;html=1;dashed=1;strokeColor=#c00000;strokeWidth=2;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1200" y="672" as="sourcePoint"/>
+                        <mxPoint x="1200" y="790" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="c_thrt" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#c00000;fontSize=9;fontColor=#c00000;fontStyle=1;" value="50 ms 手感门槛" vertex="1">
+                    <mxGeometry height="20" width="100" x="1090" y="672" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_total" parent="1" style="text;html=1;fontSize=14;align=right;verticalAlign=middle;fontColor=#8f4a1f;fontStyle=1;" value="&lt;b style='font-size:18px'&gt;≈ 66.5 ms&lt;/b&gt;" vertex="1">
+                    <mxGeometry height="30" width="190" x="1550" y="700" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_totals" parent="1" style="text;html=1;fontSize=9;align=right;verticalAlign=middle;fontColor=#888888;" value="端到端（典型值）" vertex="1">
+                    <mxGeometry height="18" width="190" x="1550" y="730" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_note2" parent="1" style="text;html=1;fontSize=10;align=left;verticalAlign=middle;fontColor=#555555;" value="主动引入 33.3ms 占 50% —— 换速度连续 + 抖动隔离；Ruckig 的 3ms 取决于 j_max 与目标变化率，陡目标下会更大。其余 ~30ms 是 VR 采样保持（不可消除）与伺服响应（厂商给定）。" vertex="1">
+                    <mxGeometry height="40" width="1530" x="200" y="810" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_s3bg" parent="1" style="rounded=1;html=1;fillColor=#fbfcfe;strokeColor=#d0d7de;arcSize=2;" value="" vertex="1">
+                    <mxGeometry height="300" width="1720" x="40" y="950" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_h3" parent="1" style="text;html=1;fontSize=15;fontStyle=1;align=left;verticalAlign=middle;" value="③ 四个控制论特征：决定了这个架构为什么安全、为什么好用" vertex="1">
+                    <mxGeometry height="26" width="1400" x="60" y="962" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_f1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;strokeWidth=2;align=left;verticalAlign=top;spacing=8;fontSize=11;" value="&lt;b style='font-size:13px'&gt;① 外环不闭合&lt;/b&gt;&lt;br&gt;&lt;br&gt;q_fb 不参与目标生成，只做诊断。&lt;br&gt;稳定性完全由内环（伺服）决定 ——&lt;br&gt;插值器和 IK 怎么调整都不会让系统失稳，&lt;br&gt;最坏情况只是跟踪变差。&lt;br&gt;&lt;br&gt;&lt;i style='color:#38761d'&gt;→ 这是这个架构安全性的根源&lt;/i&gt;" vertex="1">
+                    <mxGeometry height="215" width="390" x="80" y="1000" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_f2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;strokeWidth=2;align=left;verticalAlign=top;spacing=8;fontSize=11;" value="&lt;b style='font-size:13px'&gt;② 多速率 20:3 非整数&lt;/b&gt;&lt;br&gt;&lt;br&gt;α 相位每 3 帧（40 个 tick）循环一次，&lt;br&gt;不会均匀走 0→1。&lt;br&gt;不能用 α 单调性做健康判据；&lt;br&gt;任何数字滤波都会变成周期性时变系统。&lt;br&gt;&lt;br&gt;&lt;i style='color:#8f4a1f'&gt;→ 所以要固定延迟，让相位可预测&lt;/i&gt;" vertex="1">
+                    <mxGeometry height="215" width="390" x="500" y="1000" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_f3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;strokeWidth=2;align=left;verticalAlign=top;spacing=8;fontSize=11;" value="&lt;b style='font-size:13px'&gt;③ 三层语义转换&lt;/b&gt;&lt;br&gt;&lt;br&gt;位置 r → 速度 dq（QP IK）→ 积分回 q_cmd&lt;br&gt;→ Ruckig 1kHz 再整形一次。&lt;br&gt;速度限幅 dq_max 与伺服带宽耦合：&lt;br&gt;IK 若跑得比伺服能跟的速度快，&lt;br&gt;领先量 q_cmd − q_fb 会单调增长。&lt;br&gt;&lt;br&gt;&lt;i style='color:#8f4a1f'&gt;→ dq_max / a_max / j_max / f_bw 要一起标定&lt;/i&gt;" vertex="1">
+                    <mxGeometry height="215" width="390" x="920" y="1000" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_f4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;strokeWidth=2;align=left;verticalAlign=top;spacing=8;fontSize=11;" value="&lt;b style='font-size:13px'&gt;④ 唯一可设计环节是 H&lt;/b&gt;&lt;br&gt;&lt;br&gt;S1 / S2 / τ / G_s 都是给定的，&lt;br&gt;只有重构器能调。&lt;br&gt;延迟预算里那 33ms 是它的代价，&lt;br&gt;抖动隔离也是它买的单。&lt;br&gt;&lt;br&gt;&lt;i style='color:#38761d'&gt;→ 调参空间全部集中在这里&lt;/i&gt;" vertex="1">
+                    <mxGeometry height="215" width="390" x="1340" y="1000" as="geometry"/>
+                </mxCell>
+            <mxCell id="c_ruck" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d9f2ef;strokeColor=#0e8088;strokeWidth=2;fontSize=12;" value="&lt;b&gt;Ruckig&lt;/b&gt; OTG&lt;br&gt;&lt;font style='font-size:9px'&gt;1 kHz · jerk 限幅&lt;/font&gt;" vertex="1"><mxGeometry x="1065" y="208" width="120" height="80" as="geometry"/></mxCell><mxCell id="c_a8b" parent="1" edge="1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#333333;endFill=1;endSize=6;"><mxGeometry relative="1" as="geometry"><mxPoint x="1185" y="248" as="sourcePoint"/><mxPoint x="1205" y="248" as="targetPoint"/></mxGeometry></mxCell><mxCell id="c_l7b" parent="1" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#0e8088;fontStyle=1;" value="1 kHz · jerk 限幅" vertex="1"><mxGeometry x="1065" y="296" width="120" height="18" as="geometry"/></mxCell><mxCell id="c_b4b" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#76b7b2;strokeColor=#ffffff;strokeWidth=2;fontSize=8;align=center;" value="OTG&lt;br&gt;3 ms" vertex="1"><mxGeometry x="1310" y="700" width="60" height="60" as="geometry"/></mxCell></root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

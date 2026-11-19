@@ -1,0 +1,107 @@
+# flex_teleop
+
+多轴机械臂 VR 遥操的参考架构。核心设计是**以 `pose_id` 贯穿全链的帧对齐机制**——在 30Hz 稀疏目标、200Hz 关节流、1kHz 伺服轨迹三级时基之间保持无歧义的因果溯源，并让同一套 id 直接服务于多传感器数据对齐与 VLA 数据采集。
+
+> 当前阶段：**架构与接口契约**。框架实现将在此契约之上展开。
+
+---
+
+## 三张图
+
+| 视图 | 文件 | 回答什么问题 |
+|---|---|---|
+| **数据流架构** | [page1](assets/page1_30Hz-200Hz-teleop-chain.png) | 每个环节传什么 TARGET、各自维护什么 STATE |
+| **帧对齐结构** | [page2](assets/page2_frame-alignment-3layer.png) | pose_id / tick_seq / stamp 如何分工，1:N 组关系如何成立 |
+| **控制系统视角** | [page3](assets/page3_control-system-view.png) | 延迟从哪里来、为什么不会失稳、什么可调 |
+
+矢量版在 `assets/*.svg`，可编辑源文件 `assets/flex_teleop_architecture.drawio`（三页）。
+
+---
+
+## 核心设计
+
+### 1. pose_id：帧身份的唯一依据
+
+- 在**源头分配一次**（VR 采集侧），单调递增 `uint64`
+- 全链**只读透传**，任何环节不得重生
+- **不承担时间语义**：跨机时钟不同源，`stamp` 只做延迟诊断
+
+### 2. 三级时基，各管一段
+
+| 机制 | 作用域 | 能做什么 | 不能做什么 |
+|---|---|---|---|
+| `pose_id` | 跨机器 · 30Hz | 帧身份、乱序丢弃、丢帧判定、因果分组 | 测延迟 |
+| `tick_seq` | 单机 · 200Hz | 指令↔反馈同拍配对、tick 级丢包 | 跨机对齐 |
+| `stamp` | 各端本地 | 端到端延迟、录制回放、抖动统计 | 帧身份 |
+
+1kHz 层**不带任何 frame id**——它是本地闭环的实现细节。
+
+### 3. 1:N 组关系，不是合并 ID
+
+30Hz : 200Hz = **3 : 20**（非整数比）。一个 pose 帧对应 6~7 个 tick，逐帧在 6/7 之间循环。
+
+因此每个 200Hz tick 登记它的上游来源：
+
+```
+src = (pose_id_a, pose_id_b, alpha)
+```
+
+查询 `WHERE id_a <= P < id_b` 即可取出该 pose 帧影响过的全部关节指令。**这是外键，不是合并后的新 ID。**
+
+### 4. 两个入口汇入同一条 200Hz 关节流
+
+- **pose 模式**：VR 位姿 → 插值 → QP IK → 关节
+- **joint 模式**：上层直发 30Hz 关节目标（旁路 IK）
+
+两条路径汇聚到同一个流式目标层，按最近一帧仲裁，模式切换需保证 `pose_id` 不断档。
+
+### 5. 视觉 / 传感器的帧对齐
+
+图像本身**不需要 id**。图像到达时刻查询插值器状态，得到 `(id_a, id_b, alpha)` 并附着到样本上：
+
+```
+{ image_k, (id_a, id_b, alpha), q_fb, T_actual }
+```
+
+无需跨设备时钟同步，帧率不同也能落到同一套 pose 区间。这就是模仿学习数据集"观测-动作对齐"的通用解。
+
+---
+
+## 接口契约
+
+**[docs/04-interface.md](docs/04-interface.md)** 定义了框架的全部输入输出：
+
+- 5 个核心数据结构（`PoseFrame` / `JointTarget` / `JointStream` / `JointFeedback` / `TeleopStatus`）
+- 时序契约（频率、单调性、超时判据）
+- 误差语义（`e_model` / `e_real` / `Δq` 三者的分工）
+- 扩展点（IK 后端、传感器打标）
+
+框架核心**不依赖任何特定中间件**，ROS 2 / ZMQ / 共享内存都只作为适配器。
+
+---
+
+## 文档
+
+- [01 数据流架构](docs/01-architecture.md)
+- [02 帧对齐](docs/02-frame-alignment.md)
+- [03 控制系统视角](docs/03-control-view.md)
+- [04 接口契约](docs/04-interface.md)
+
+---
+
+## 仓库结构
+
+```
+flex_teleop/
+├── README.md
+├── docs/                  # 架构与契约文档
+└── assets/                # 三视图（PNG / SVG / drawio 源）
+```
+
+框架实现将新增：`core/`（纯算法，零中间件依赖）、`adapters/`（ROS 2 等传输层）、`plugins/`（IK 后端）。
+
+---
+
+## License
+
+待定（随框架首个可运行版本一并发布）。
