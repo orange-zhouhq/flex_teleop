@@ -26,6 +26,8 @@
 - 全链**只读透传**，任何环节不得重生
 - **不承担时间语义**：跨机时钟不同源，`stamp` 只做延迟诊断
 
+> 为什么不用时间戳做帧身份？见 [05](docs/05-pose-id-vs-timestamp.md)——含三个失效场景与八维对比。
+
 ### 2. 三级时基，各管一段
 
 | 机制 | 作用域 | 能做什么 | 不能做什么 |
@@ -138,6 +140,7 @@ const JointStream s = core.tick(t_now_ns);
 - [02 帧对齐](docs/02-frame-alignment.md)
 - [03 控制系统视角](docs/03-control-view.md)
 - [04 接口契约](docs/04-interface.md)
+- [05 为什么用 pose_id 而不是时间戳](docs/05-pose-id-vs-timestamp.md)
 
 ---
 
