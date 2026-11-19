@@ -141,6 +141,7 @@ const JointStream s = core.tick(t_now_ns);
 - [03 控制系统视角](docs/03-control-view.md)
 - [04 接口契约](docs/04-interface.md)
 - [05 为什么用 pose_id 而不是时间戳](docs/05-pose-id-vs-timestamp.md)
+- [06 自测报告](docs/06-self-test-report.md) — 含**未验证项**清单
 
 ---
 
@@ -166,6 +167,7 @@ flex_teleop/
 │   ├── srs_dh_model/      # S-R-S DH 几何与 FK/Jacobian（BSD-3）
 │   └── flex_qp_ik/        # 速度级 QP 逆运动学（BSD-3，proxsuite）
 ├── tests/                 # 82 项单元检查（含 QP 后端冒烟）
+├── benchmarks/            # tick 耗时与无堆分配验证
 ├── examples/              # 最小可运行示例
 ├── docs/                  # 架构与契约文档
 └── assets/                # 三视图（PNG / SVG / drawio 源）

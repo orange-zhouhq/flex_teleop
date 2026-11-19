@@ -33,6 +33,10 @@ add_executable(flex_teleop_minimal examples/minimal.cpp)
 target_link_libraries(flex_teleop_minimal PRIVATE flex_teleop_core)
 target_compile_options(flex_teleop_minimal PRIVATE -Wall -Wextra)
 
+add_executable(bench_tick benchmarks/bench_tick.cpp)
+target_link_libraries(bench_tick PRIVATE flex_teleop_core)
+target_compile_options(bench_tick PRIVATE -Wall -Wextra)
+
 # ── 参考 IK 后端（可选）：S-R-S 速度级 QP ────────────────────────────────
 # 依赖 Eigen3 与 proxsuite（纯头文件）。关闭时核心库不受影响。
 option(FLEX_TELEOP_WITH_QP_IK "Build reference QP IK backend (Eigen + proxsuite)" OFF)
