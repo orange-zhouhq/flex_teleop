@@ -188,12 +188,18 @@ class IKBackend {
 public:
   virtual ~IKBackend() = default;
 
-  virtual bool solve(const Isometry3d& T_target,
+  virtual bool solve(const Pose& T_target,
                      const double q_hint[7],
                      const double q_lower[7],
                      const double q_upper[7],
                      double dt,
                      double q_out[7]) = 0;
+
+  /// 正运动学。e_model / e_real 的必需输入。
+  virtual void fk(const double q[7], Pose& T_out) const = 0;
+
+  /// 后端类别，写入 JointStream.solver。
+  virtual Solver kind() const { return Solver::kQp; }
 
   virtual const char* name() const = 0;
 };
