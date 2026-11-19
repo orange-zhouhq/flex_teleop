@@ -2,7 +2,7 @@
 
 多轴机械臂 VR 遥操的参考架构。核心设计是**以 `pose_id` 贯穿全链的帧对齐机制**——在 30Hz 稀疏目标、200Hz 关节流、1kHz 伺服轨迹三级时基之间保持无歧义的因果溯源，并让同一套 id 直接服务于多传感器数据对齐与 VLA 数据采集。
 
-> 当前阶段：**核心骨架 + 参考 QP IK 可运行**。插值、双入口仲裁、200Hz 编排、可插拔 IK 抽象与 S-R-S 速度级 QP 后端均已实现并有测试；传输适配层待接入。
+> 当前阶段：**核心 + QP IK + ROS 2 适配层可运行**。插值、双入口仲裁、200Hz 编排、可插拔 IK、S-R-S 速度级 QP 与端到端 ROS 2 节点均已实现并验证。
 
 ---
 
@@ -80,6 +80,12 @@ ctest --test-dir build --output-on-failure
 cmake -S . -B build-qp -DCMAKE_BUILD_TYPE=Release -DFLEX_TELEOP_WITH_QP_IK=ON
 cmake --build build-qp -j
 ./build-qp/test_qp_backend
+
+# ROS 2 适配层（需要 ROS 2）
+source /opt/ros/humble/setup.bash
+colcon build --base-paths adapters/ros2 --cmake-args -DCMAKE_BUILD_TYPE=Release
+source install/setup.bash
+ros2 run flex_teleop_ros teleop_node --ros-args -p ik_type:=none
 ```
 
 核心只要求 C++17 与 CMake ≥ 3.16；QP 后端额外需要 Eigen3 与 proxsuite（纯头文件）。
@@ -152,6 +158,7 @@ flex_teleop/
 │   │   └── teleop_core.hpp        # 200Hz 编排
 │   └── src/
 ├── plugins/qp_ik/         # 参考 IK 后端：FlexQpIk -> IKBackend 适配
+├── adapters/ros2/         # ROS 2 适配层（独立包，不引用任何外部消息定义）
 ├── third_party/
 │   ├── srs_dh_model/      # S-R-S DH 几何与 FK/Jacobian（BSD-3）
 │   └── flex_qp_ik/        # 速度级 QP 逆运动学（BSD-3，proxsuite）
@@ -161,7 +168,25 @@ flex_teleop/
 └── assets/                # 三视图（PNG / SVG / drawio 源）
 ```
 
-后续将新增：`adapters/`（ROS 2 / ZMQ / 共享内存等传输层）。
+后续将新增：ZMQ / 共享内存等其它传输适配层。
+
+---
+
+## ROS 2 适配层
+
+`adapters/ros2/` 下两个包，消息定义**完全按 [04-interface.md](docs/04-interface.md) 独立重建**，
+不引用任何外部 `robot_interface` 之类的包：
+
+| 包 | 内容 |
+|---|---|
+| `flex_teleop_msgs` | `PoseFrame` / `JointTarget` / `JointFeedback` / `JointStream` / `TeleopStatus` |
+| `flex_teleop_ros` | `teleop_node`：订阅 → 核心 → 发布，不含任何算法逻辑 |
+
+话题（相对节点命名空间）：`pose_target`、`joint_target`、`joint_feedback` 输入；
+`joint_stream`（200Hz，reliable）、`teleop_status`（20Hz，best-effort）输出。
+
+⚠️ 这两个包会被 `colcon` 递归扫描到。如果你不希望它们进入既有工作空间的整体构建，
+在 `flex_teleop/adapters/` 下放一个空的 `COLCON_IGNORE` 文件即可。
 
 ---
 

@@ -1,0 +1,28 @@
+# flex_teleop_node 示例配置。
+#
+# 注意：qp 下的几何参数是**通用 S-R-S 构型的占位值**，实机请替换为
+# 你自己 URDF/DH 标定出来的参数。
+
+flex_teleop_node:
+  ros__parameters:
+    side: 0                       # 0 = left, 1 = right
+    fixed_delay_s: 0.035          # 1.05 / 30Hz
+    output_rate_hz: 200.0
+    status_rate_hz: 20.0
+
+    degraded_hold_frames: 20      # 连续 HOLD 超过此值 -> DEGRADED
+    fault_hold_frames: 100        # 再超过 -> FAULT
+
+    joint_lower: [-2.90, -2.90, -2.90, -2.90, -2.90, -2.90, -2.90]
+    joint_upper: [ 2.90,  2.90,  2.90,  2.90,  2.90,  2.90,  2.90]
+
+    ik_type: "none"               # none | qp
+
+    qp:
+      tick_s: 0.005
+      one_shot: false             # false = kServo（200Hz 回路）
+      a:     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+      alpha: [0.0, 1.5707963, -1.5707963, 1.5707963, -1.5707963, 1.5707963, 0.0]
+      d:     [0.30, 0.0, 0.30, 0.0, 0.20, 0.0, 0.10]
+      lower: [-2.90, -2.90, -2.90, -2.90, -2.90, -2.90, -2.90]
+      upper: [ 2.90,  2.90,  2.90,  2.90,  2.90,  2.90,  2.90]
