@@ -2,7 +2,7 @@
 
 多轴机械臂 VR 遥操的参考架构。核心设计是**以 `pose_id` 贯穿全链的帧对齐机制**——在 30Hz 稀疏目标、200Hz 关节流、1kHz 伺服轨迹三级时基之间保持无歧义的因果溯源，并让同一套 id 直接服务于多传感器数据对齐与 VLA 数据采集。
 
-> 当前阶段：**架构与接口契约**。框架实现将在此契约之上展开。
+> 当前阶段：**核心骨架可运行**。插值、双入口仲裁、200Hz 编排、IK 抽象已实现并有单元测试；传输适配层与具体 IK 后端待接入。
 
 ---
 
@@ -67,6 +67,46 @@ src = (pose_id_a, pose_id_b, alpha)
 
 ---
 
+## 快速开始
+
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j
+ctest --test-dir build --output-on-failure
+./build/flex_teleop_minimal
+```
+
+零第三方依赖，只需 C++17 与 CMake ≥ 3.16。
+
+最小用法：
+
+```cpp
+#include <flex_teleop/teleop_core.hpp>
+
+TeleopCore::Config cfg;
+cfg.fixed_delay_s = 0.035;          // 1.05 / 30Hz
+TeleopCore core(cfg);
+core.setIK(&my_ik);                 // 实现 IKBackend
+
+// 接收线程
+core.submitPose(T, pose_id, t_arrival_ns);
+
+// 200Hz 定时器
+const JointStream s = core.tick(t_now_ns);
+// s.q_cmd / s.src.{id_a,id_b,alpha} / s.mode
+```
+
+示例输出（30Hz 正弦 → 200Hz 关节流）：
+
+```
+ t(ms)       mode         q0     id_a     id_b alpha
+    50       POSE     0.0234        1        2 0.450
+   100       POSE     0.1017        3        4 0.000
+   150       POSE     0.1644        4        5 0.450
+```
+
+---
+
 ## 接口契约
 
 **[docs/04-interface.md](docs/04-interface.md)** 定义了框架的全部输入输出：
@@ -94,11 +134,24 @@ src = (pose_id_a, pose_id_b, alpha)
 ```
 flex_teleop/
 ├── README.md
+├── CMakeLists.txt
+├── core/
+│   ├── include/flex_teleop/
+│   │   ├── types.hpp              # 6 个数据结构
+│   │   ├── pose_math.hpp          # SE(3) 基础运算（零依赖）
+│   │   ├── interpolator.hpp       # SE(3) 双缓存插值器
+│   │   ├── joint_interpolator.hpp # 关节空间同构实现
+│   │   ├── source_mux.hpp         # 双入口仲裁
+│   │   ├── ik_backend.hpp         # IK 可插拔抽象
+│   │   └── teleop_core.hpp        # 200Hz 编排
+│   └── src/
+├── tests/                 # 75 项单元检查
+├── examples/              # 最小可运行示例
 ├── docs/                  # 架构与契约文档
 └── assets/                # 三视图（PNG / SVG / drawio 源）
 ```
 
-框架实现将新增：`core/`（纯算法，零中间件依赖）、`adapters/`（ROS 2 等传输层）、`plugins/`（IK 后端）。
+后续将新增：`adapters/`（ROS 2 / ZMQ / 共享内存等传输层）、`plugins/`（参考 IK 后端）。
 
 ---
 
