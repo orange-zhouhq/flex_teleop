@@ -32,18 +32,21 @@ option(FLEX_TELEOP_WITH_QP_IK "Build with reference QP IK backend" OFF)
 
 if(FLEX_TELEOP_WITH_QP_IK)
   find_package(Eigen3 3.3 REQUIRED NO_MODULE)
-  find_package(proxsuite QUIET)
-  if(NOT proxsuite_FOUND)
+  # proxsuite 是纯头文件库（INTERFACE target，无链接库）。
+  # 直接定位头文件，避免 find_package 触发其 ament_cmake 依赖
+  # ——后者的 config 在未 source ROS 的环境里会直接报错。
+  find_path(PROXSUITE_INCLUDE_DIR proxsuite/config.hpp
+    HINTS /opt/ros/humble/include /usr/include /usr/local/include)
+  if(NOT PROXSUITE_INCLUDE_DIR)
     file(GLOB _ROS_INCLUDE_DIRS "/opt/ros/*/include")
     find_path(PROXSUITE_INCLUDE_DIR proxsuite/config.hpp
       PATHS ${_ROS_INCLUDE_DIRS} NO_DEFAULT_PATH)
-    if(PROXSUITE_INCLUDE_DIR)
-      add_library(proxsuite::proxsuite INTERFACE IMPORTED)
-      target_include_directories(proxsuite::proxsuite INTERFACE ${PROXSUITE_INCLUDE_DIR})
-      set(proxsuite_FOUND TRUE)
-    endif()
   endif()
-  if(NOT proxsuite_FOUND)
+  if(PROXSUITE_INCLUDE_DIR)
+    add_library(proxsuite::proxsuite INTERFACE IMPORTED)
+    target_include_directories(proxsuite::proxsuite INTERFACE ${PROXSUITE_INCLUDE_DIR})
+  endif()
+  if(NOT PROXSUITE_INCLUDE_DIR)
     message(FATAL_ERROR "proxsuite 未找到")
   endif()
 
